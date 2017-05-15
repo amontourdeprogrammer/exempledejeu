@@ -43,4 +43,16 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
+app.setIo = function(io) {
+  io.on('connection', function(socket){
+    var clientId = 1000*Math.random();
+    console.log('a user connected ' + clientId);
+
+    socket.on('place', function(info){
+      console.log(`${clientId} placed ${info.frame} at (${info.x},${info.y})`);
+      socket.broadcast.emit('placed', info);
+    });
+  });
+};
+
 module.exports = app;
